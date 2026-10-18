@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const html=fs.readFileSync(new URL('../public/game.html',import.meta.url),'utf8');
+assert(!/\/\*__[A-Z]+__\*\//.test(html),'Unresolved HTML payload');
+const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
+assert.equal(scripts.length,6,'All six script payloads are present');
+new vm.Script(scripts.join('\n'),{filename:'Tidemark_World_Atlas.html'});
+for(const id of ['cityHost','cityCanvas','cityLabels','cityMini','cityFacilities','gameDialog','gameBoot','mapStage','map','portHead'])assert.equal([...html.matchAll(new RegExp(`id="${id}"`,'g'))].length,1,id+' has one mount point');
+assert(Buffer.byteLength(html)<25*1024*1024,'Single-file artifact remains below 25 MiB');
+console.log(JSON.stringify({status:'passed',scripts:scripts.length,bytes:Buffer.byteLength(html),selfContainedImages:[...html.matchAll(/data:image\/png;base64,/g)].length}));

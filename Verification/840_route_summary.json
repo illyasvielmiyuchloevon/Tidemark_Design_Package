@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "maps": 120,
+  "expectedRoutes": 840,
+  "passed": 840,
+  "failures": [],
+  "idleDuringRoutes": 0,
+  "maxEndpointError": 3.637978807091713e-11,
+  "maxDistanceDifference": 6.912159733474255e-11,
+  "maxFrames": 1766,
+  "thresholds": 840
+}
